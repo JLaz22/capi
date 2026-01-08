@@ -1,17 +1,5 @@
 import { Expense, Profile } from "./types";
 
-export function sum(expenses: Expense[]) {
-  return expenses.reduce((acc, e) => acc + e.amount, 0);
-}
-
-export function weeklyPlanBudget(profile: Profile) {
-  return profile.planCost / profile.weeksInTerm;
-}
-
-export function inDateRange(expenses: Expense[], from: string, to: string) {
-  return expenses.filter((e) => e.date >= from && e.date <= to);
-}
-
 export function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -20,6 +8,30 @@ export function daysAgoISO(days: number) {
   const d = new Date();
   d.setDate(d.getDate() - days);
   return d.toISOString().slice(0, 10);
+}
+
+export function sum(expenses: Expense[]) {
+  return expenses.reduce((acc, e) => acc + e.amount, 0);
+}
+
+export function sortByDateDesc(expenses: Expense[]) {
+  return [...expenses].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function inRange(expenses: Expense[], from: string, to: string) {
+  return expenses.filter((e) => e.date >= from && e.date <= to);
+}
+
+export function weeklyBudget(profile: Profile) {
+  // Use explicit weeklyBudget if set, otherwise derive from dining plan cost/term
+  if (profile.weeklyBudget && profile.weeklyBudget > 0)
+    return profile.weeklyBudget;
+  return profile.planCost / profile.weeksInTerm;
+}
+
+export function percentUsed(spend: number, budget: number) {
+  if (budget <= 0) return 0;
+  return (spend / budget) * 100;
 }
 
 export function heatmapByDay(expenses: Expense[]) {
@@ -31,4 +43,17 @@ export function heatmapByDay(expenses: Expense[]) {
     map.set(e.date, cur);
   }
   return Array.from(map.values()).sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
+export function weekWindow() {
+  const to = todayISO();
+  const from = daysAgoISO(6);
+  return { from, to };
+}
+
+export function prevWeekWindow() {
+  // previous 7 days window before current week window
+  const end = daysAgoISO(7);
+  const start = daysAgoISO(13);
+  return { from: start, to: end };
 }
