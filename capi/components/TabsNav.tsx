@@ -7,7 +7,7 @@ import { LayoutGrid, CalendarDays, Lightbulb, Settings } from "lucide-react";
 
 const tabs = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
-  { href: "/meal-plan", label: "Meal Plan", icon: CalendarDays },
+
   { href: "/suggestions", label: "Suggestions", icon: Lightbulb },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
